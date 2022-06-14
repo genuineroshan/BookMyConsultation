@@ -1,0 +1,114 @@
+version: '3.3'
+services:
+  appointmentservice:
+    build: appointment-service
+    container_name: appointmentservice
+    image: appointmentservice:1.0.0
+    ports:
+      - "8082:8082"
+    networks:
+      - microservicesnet
+    depends_on:
+      - gateway
+      - kafka
+  paymentservice:
+    build: payment-service
+    container_name: paymentservice
+    image: paymentservice:1.0.0
+    ports:
+      - "8083:8083"
+    networks:
+      - microservicesnet
+    depends_on:
+      - gateway
+      - kafka
+  notificationservice:
+    build: notification-service
+    container_name: notificationservice
+    image: notificationservice:1.0.0
+    ports:
+      - "8085:8085"
+    networks:
+      - microservicesnet
+    depends_on:
+      - kafka
+      - gateway
+
+  doctorservice:
+    build: doctor-service
+    container_name: doctorservice
+    image: doctorservice:1.0.0
+    ports:
+      - "8080:8080"
+    networks:
+      - microservicesnet
+    depends_on:
+      - kafka
+      - gateway
+
+  ratingservice:
+    build: rating-service
+    container_name: ratingservice
+    image: ratingservice:1.0.0
+    ports:
+      - "8084:8084"
+    networks:
+      - microservicesnet
+    depends_on:
+      - kafka
+      - gateway
+
+  userservice:
+    build: user-service
+    container_name: userservice
+    image: userservice:1.0.0
+    ports:
+      - "8081:8081"
+    networks:
+      - microservicesnet
+    depends_on:
+      - kafka
+      - gateway
+
+  gateway:
+    build: bmc-gateway
+    container_name: gateway
+    image: gateway:1.0.0
+    ports:
+      - "9191:9191"
+    networks:
+      - microservicesnet
+  kafka:
+    image: 'bitnami/kafka:latest'
+    ports:
+      - "9092:9092"
+    volumes:
+      - "kafka_data:/bitnami"
+    environment:
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+    depends_on:
+      - zookeeper
+    networks:
+      - microservicesnet
+  zookeeper:
+    image: 'bitnami/zookeeper:latest'
+    volumes:
+      - "zookeeper_data:/bitnami"
+    ports:
+      - "2181:2181"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      - microservicesnet
+networks:
+  microservicesnet:
+    driver: bridge
+volumes:
+  zookeeper_data:
+    driver: local
+  kafka_data:
+    driver: local
+

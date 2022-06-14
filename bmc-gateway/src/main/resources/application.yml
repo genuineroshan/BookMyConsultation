@@ -1,0 +1,41 @@
+server:
+  port: 9191
+
+spring:
+  application:
+    name: API-GATEWAY
+  cloud:
+    gateway:
+      routes:
+        - id: APPOINTMENT-SERVICE
+          uri: http://appointmentservice:8082/
+          predicates:
+            - Path=/appointments/**
+
+        - id: DOCTOR-SERVICE
+          uri: http://doctorservice:8080/
+          predicates:
+            - Path=/doctors/**
+
+        - id: USER-SERVICE
+          uri: http://userservice:8081/
+          predicates:
+            - Path=/users/**
+
+        - id: PAYMENT-SERVICE
+          uri: http://paymentservice:8083/
+          predicates:
+            - Path=/payments/**
+
+        - id: RATING-SERVICE
+          uri: http://ratingservice:8084/
+          predicates:
+            - Path=/ratings/**
+
+        - id: NOTIFICATION-SERVICE
+          uri: http://notificationservice:8085/
+          predicates:
+            - Path=/notifications/**
+
+    discovery:
+      enabled: true
