@@ -41,8 +41,8 @@ public class NotificationService {
          * Credentials of the IAM user with SES full access.
          */
         StaticCredentialsProvider staticCredentialsProvider = StaticCredentialsProvider.create(
-                AwsBasicCredentials.create("AKIARPE32VMFSI7N63WT",
-                        "SWFs0SVf4oEq5YZ9LqD8ApmZ0k0q4YgzAoxgZ81E")
+                AwsBasicCredentials.create("AccessKey",
+                        "SecretKey")
         );
 
         client = SesClient.builder()
